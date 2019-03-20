@@ -1,11 +1,20 @@
-<button id="scrape">scrape</button>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <button id="scrape">scrape</button>
 
-{{#each articles}}
-{{> articles/articleElement}}
-{{/each}}
-
-<div class="commentBox">
-    <input type="text" id="comment">
-    <button id="submit">Comment</button>
+            {{#each articles}}
+            {{> articles/articleElement}}
+            {{/each}}
+        </div>
+        <div class="col-md-4">
+            <div class="commentBox">
+                <p id="articleComment">Article Note will go here</p>
+                <input placeholder="make a comment" type="text" id="comment">
+                <button id="submit">Comment</button>
+                <button id="delete">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>
-

@@ -29,14 +29,31 @@ module.exports = function (app) {
                     .children(".hed")
                     .children("a")
                     .attr("href");
-
-                db.Article.create(result)
+                db.Article.find({})
                     .then(function (dbArticle) {
-                        console.log(dbArticle);
-                    })
-                    .catch(function (err) {
-                        console.log(err);
+                        var readyToPush = true;
+                        var counter = 0;
+                        while (counter > dbArticle.length) {
+                            console.log(result.headline.toString());
+                            console.log(dbArticle[counter].headline.toString());
+                            if (result.headline.toString() === dbArticle[counter].headline.toString()) {
+
+                                readyToPush = false;
+                                break;
+                            };
+                            counter++;
+                        };
+                        if (readyToPush) {
+                            db.Article.create(result)
+                                .then(function (dbArticle) {
+                                    // console.log(dbArticle);
+                                })
+                                .catch(function (err) {
+                                    console.log(err);
+                                });
+                        };
                     });
+
             });
         });
         res.send("scraped");
@@ -47,7 +64,6 @@ module.exports = function (app) {
                 let handleBarsArticle = {
                     articles: dbArticle
                 }
-                console.log(handleBarsArticle);
                 res.render("index", handleBarsArticle);
             })
             .catch(function (err) {
@@ -60,7 +76,7 @@ module.exports = function (app) {
         })
             .populate("comment")
             .then(function (dbArticle) {
-                console.log(dbArticle);
+                console.log(dbArticle.comment.title);
                 res.json(dbArticle);
             })
             .catch(err => {
@@ -68,15 +84,26 @@ module.exports = function (app) {
             });
     });
     app.post("/oneArticle/:id", function (req, res) {
-        db.userComment.create(req.body)
+        db.UserComment.create(req.body)
             .then(function (dbComment) {
                 return db.Article.findOneAndUpdate(
                     { _id: req.params.id },
-                    { title: dbComment._id },
+                    { comment: dbComment._id },
                     { new: true });
             })
             .then(dbArticle => {
                 res.json(dbArticle);
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    });
+    app.delete("/deleteComment/:id", function (req, res) {
+        db.UserComment.deleteOne({
+            _id: req.params.id
+        })
+            .then(function (dbComment) {
+                res.json(dbComment);
             })
             .catch(function (err) {
                 console.log(err);

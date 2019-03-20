@@ -8,7 +8,7 @@ const ArticleSchema = new Schema({
     link: String,
     comment: {
         type: Schema.Types.ObjectId,
-        ref: "userComment"
+        ref: "UserComment"
     }
 });
 
