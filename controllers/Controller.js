@@ -1,14 +1,14 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const express = require("express");
 const mongoose = require("mongoose");
 
 const MONGODB = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 mongoose.connect(MONGODB, { useNewUrlParser: true });
 
 const db = require("../models");
+
 module.exports = function (app) {
-    app.get("/", function (req, res) {
+    app.get("/scrape", function (req, res) {
         axios.get("https://www.propublica.org/").then(function (response) {
             let $ = cheerio.load(response.data);
             $(".story-entry").each(function (i, element) {
@@ -29,7 +29,7 @@ module.exports = function (app) {
                     .children(".hed")
                     .children("a")
                     .attr("href");
-                console.log(result);
+
                 db.Article.create(result)
                     .then(function (dbArticle) {
                         console.log(dbArticle);
@@ -40,5 +40,46 @@ module.exports = function (app) {
             });
         });
         res.send("scraped");
+    });
+    app.get("/", function (req, res) {
+        db.Article.find({})
+            .then(function (dbArticle) {
+                let handleBarsArticle = {
+                    articles: dbArticle
+                }
+                console.log(handleBarsArticle);
+                res.render("index", handleBarsArticle);
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    });
+    app.get("/oneArticle/:id", function (req, res) {
+        db.Article.findOne({
+            _id: req.params.id
+        })
+            .populate("comment")
+            .then(function (dbArticle) {
+                console.log(dbArticle);
+                res.json(dbArticle);
+            })
+            .catch(err => {
+                res.json(err);
+            });
+    });
+    app.post("/oneArticle/:id", function (req, res) {
+        db.userComment.create(req.body)
+            .then(function (dbComment) {
+                return db.Article.findOneAndUpdate(
+                    { _id: req.params.id },
+                    { title: dbComment._id },
+                    { new: true });
+            })
+            .then(dbArticle => {
+                res.json(dbArticle);
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
     });
 };

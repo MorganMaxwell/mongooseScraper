@@ -1,3 +1,8 @@
-{{#each Article.data}}
-<div>stuff</div>
-{{/each}}
+<div class="container">
+    <div>
+        <h2>{{headline}}</h2>
+        <p>{{summary}}</p>
+        <a href="{{link}}" target="_blank">{{link}}</a>
+        <button data-id="{{_id}}" class="articles">Select</button>
+    </div>
+</div>
