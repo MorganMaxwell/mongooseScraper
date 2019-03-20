@@ -31,22 +31,16 @@ module.exports = function (app) {
                     .attr("href");
                 db.Article.find({})
                     .then(function (dbArticle) {
-                        var readyToPush = true;
-                        var counter = 0;
-                        while (counter > dbArticle.length) {
-                            console.log(result.headline.toString());
-                            console.log(dbArticle[counter].headline.toString());
-                            if (result.headline.toString() === dbArticle[counter].headline.toString()) {
-
+                        let readyToPush = true;
+                        for (var i = 0; i < dbArticle.length; i++) {
+                            if (dbArticle[i].headline === result.headline) {
                                 readyToPush = false;
-                                break;
                             };
-                            counter++;
                         };
                         if (readyToPush) {
                             db.Article.create(result)
                                 .then(function (dbArticle) {
-                                    // console.log(dbArticle);
+                                    console.log(dbArticle);
                                 })
                                 .catch(function (err) {
                                     console.log(err);
