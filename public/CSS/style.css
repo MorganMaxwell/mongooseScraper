@@ -1,0 +1,21 @@
+body {
+    background-image: url("../Images/mongooseBackground.jpg");
+    height: 100%;
+}
+.jumbotron {
+    margin-bottom: 30px;
+    background-image: url("../Images/mongooseBackground.jpg")
+}
+.card {
+    margin-top: 10px;
+    background-color: rgb(194, 174, 131);
+}
+#scrape {
+    font-size: 16px;
+}
+a:link {
+    color: darkcyan;
+}
+a:visited {
+    color: darkolivegreen;
+}
