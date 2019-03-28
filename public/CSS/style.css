@@ -1,6 +1,8 @@
 body {
     background-image: url("../Images/mongooseBackground.jpg");
     height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 .jumbotron {
     margin-bottom: 30px;
